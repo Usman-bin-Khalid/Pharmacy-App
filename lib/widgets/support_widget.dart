@@ -12,6 +12,9 @@ class AppWidget {
   static TextStyle lightTextStyle(double size) {
     return TextStyle(fontFamily: 'Poppins1', color: Colors.black, fontSize: size);
   }
+   static TextStyle whiteTextStyle(double size) {
+    return TextStyle(fontFamily: 'Poppins1', color: Colors.white, fontSize: size);
+  }
 
   static Widget selectedCategory(String name) {
     return Material(
