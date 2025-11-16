@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pharmacy_app/pages/detail_page.dart';
 import 'package:pharmacy_app/widgets/support_widget.dart';
 
 class Home extends StatefulWidget {
@@ -166,74 +167,82 @@ class _HomeState extends State<Home> {
                 ),
               ),
               SizedBox(height: 20.0),
-              Container(
-                margin: EdgeInsets.only(right: 30.0),
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xffbab3a6),
-                      Color(0xffddd7cd),
-                      Color(0xffa59c8f),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DetailPage()),
+                  );
+                },
+                child: Container(
+                  margin: EdgeInsets.only(right: 30.0),
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0xffbab3a6),
+                        Color(0xffddd7cd),
+                        Color(0xffa59c8f),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                   ),
-                ),
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Image.asset(
-                        'assets/images/medicine.png',
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: Image.asset(
+                          'assets/images/medicine.png',
+                          height: 300,
+                        ),
+                      ),
+                      Container(
                         height: 300,
-                      ),
-                    ),
-                    Container(
-                      height: 300,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            margin: EdgeInsets.all(20),
-                            width: MediaQuery.of(context).size.width,
-                            decoration: BoxDecoration(
-                              color: Color(0xffc8c1b5),
-                              border: Border.all(
-                                width: 1.5,
-                                color: Colors.white,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              margin: EdgeInsets.all(20),
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                color: Color(0xffc8c1b5),
+                                border: Border.all(
+                                  width: 1.5,
+                                  color: Colors.white,
+                                ),
+                                borderRadius: BorderRadius.circular(30),
                               ),
-                              borderRadius: BorderRadius.circular(30),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Unique Medicine',
+                                        style: AppWidget.whiteTextStyle(18),
+                                      ),
+                                      Text(
+                                        '\$100',
+                                        style: AppWidget.whiteTextStyle(18),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    'Oxmas',
+                                    style: AppWidget.whiteTextStyle(18),
+                                  ),
+                                ],
+                              ),
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Unique Medicine',
-                                      style: AppWidget.whiteTextStyle(18),
-                                    ),
-                                    Text(
-                                      '\$100',
-                                      style: AppWidget.whiteTextStyle(18),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  'Oxmas',
-                                  style: AppWidget.whiteTextStyle(18),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
 
