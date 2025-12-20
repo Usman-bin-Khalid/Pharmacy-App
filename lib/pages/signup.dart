@@ -45,7 +45,7 @@ class _SignupState extends State<Signup> {
               ),
               child: Column(
                 children: const [
-                  SizedBox(height: 60.0), 
+                  SizedBox(height: 35.0), 
                   Text(
                     'Join Us',
                     style: TextStyle(
@@ -57,7 +57,7 @@ class _SignupState extends State<Signup> {
                   Text(
                     'Create Free Account',
                     style: TextStyle(
-                      fontSize: 40.0,
+                      fontSize: 30.0,
                       color: Colors.black,
                       fontFamily: 'FredokaLight',
                     ),
@@ -70,7 +70,8 @@ class _SignupState extends State<Signup> {
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height / 3.5, 
+                top: MediaQuery.of(context).size.height / 3.7
+                , 
                 left: 20.0,
                 right: 20.0,
                 bottom: 20.0, 
@@ -90,7 +91,7 @@ class _SignupState extends State<Signup> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min, 
                 children: [
-                  const SizedBox(height: 30.0),
+                  const SizedBox(height: 20.0),
                   const Center(
                     child: Text(
                       'Personal Info',
@@ -109,21 +110,21 @@ class _SignupState extends State<Signup> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(height: 30.0),
+                  const SizedBox(height: 20.0),
                     const Text(
                     'Full Name',
                     style: TextStyle(fontSize: 20.0, fontFamily: 'FredokaBold'),
                   ),
                   const SizedBox(height: 5),
                   _buildTextField("Your Name"),
-                  const SizedBox(height: 30.0),
+                  const SizedBox(height: 20.0),
                   const Text(
                     'Email Address',
                     style: TextStyle(fontSize: 20.0, fontFamily: 'FredokaBold'),
                   ),
                   const SizedBox(height: 5),
                   _buildTextField("Your Email Address"),
-                  const SizedBox(height: 30.0),
+                  const SizedBox(height: 20.0),
                   const Text(
                     'Password',
                     style: TextStyle(fontSize: 20.0, fontFamily: 'FredokaBold'),
@@ -131,7 +132,7 @@ class _SignupState extends State<Signup> {
                   const SizedBox(height: 5),
                   _buildTextField("Your Password"),
                  
-                  const SizedBox(height: 30.0),
+                  const SizedBox(height: 20.0),
                   
                   
                   Container(
@@ -148,7 +149,7 @@ class _SignupState extends State<Signup> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 30.0),
+                  const SizedBox(height: 20.0),
                   Center(
                     child: GestureDetector(
                       onTap: () {
@@ -161,7 +162,7 @@ class _SignupState extends State<Signup> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 30.0),
+                  const SizedBox(height: 20.0),
                 ],
               ),
             ),
