@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pharmacy_app/pages/signup.dart';
-
-class Login extends StatefulWidget {
-  const Login({super.key});
+import 'package:pharmacy_app/pages/login.dart';
+class Signup extends StatefulWidget {
+  const Signup({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<Signup> createState() => _SignupState();
 }
 
-class _LoginState extends State<Login> {
+class _SignupState extends State<Signup> {
   @override
-Widget build(BuildContext context) {
-
+  Widget build(BuildContext context) {
+  
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -48,7 +47,7 @@ Widget build(BuildContext context) {
                 children: const [
                   SizedBox(height: 60.0), 
                   Text(
-                    'Hello',
+                    'Join Us',
                     style: TextStyle(
                       fontSize: 60.0,
                       color: Colors.black,
@@ -56,7 +55,7 @@ Widget build(BuildContext context) {
                     ),
                   ),
                   Text(
-                    'Welcome Back',
+                    'Create Free Account',
                     style: TextStyle(
                       fontSize: 40.0,
                       color: Colors.black,
@@ -94,7 +93,7 @@ Widget build(BuildContext context) {
                   const SizedBox(height: 30.0),
                   const Center(
                     child: Text(
-                      'Login Account',
+                      'Personal Info',
                       style: TextStyle(
                         fontSize: 35.0,
                         color: Colors.black,
@@ -111,6 +110,13 @@ Widget build(BuildContext context) {
                     ),
                   ),
                   const SizedBox(height: 30.0),
+                    const Text(
+                    'Full Name',
+                    style: TextStyle(fontSize: 20.0, fontFamily: 'FredokaBold'),
+                  ),
+                  const SizedBox(height: 5),
+                  _buildTextField("Your Name"),
+                  const SizedBox(height: 30.0),
                   const Text(
                     'Email Address',
                     style: TextStyle(fontSize: 20.0, fontFamily: 'FredokaBold'),
@@ -124,14 +130,7 @@ Widget build(BuildContext context) {
                   ),
                   const SizedBox(height: 5),
                   _buildTextField("Your Password"),
-                  const SizedBox(height: 10),
-                  const Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      'Forgot Password?',
-                      style: TextStyle(fontSize: 18.0, fontFamily: 'FredokaLight'),
-                    ),
-                  ),
+                 
                   const SizedBox(height: 30.0),
                   
                   
@@ -144,20 +143,20 @@ Widget build(BuildContext context) {
                     ),
                     child: const Center(
                       child: Text(
-                        'Login Account',
+                        'Create Account',
                         style: TextStyle(fontSize: 20.0, fontFamily: 'FredokaBold'),
                       ),
                     ),
                   ),
                   const SizedBox(height: 30.0),
-                   Center(
+                  Center(
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                        const Signup()));
+                        const Login()));
                       },
                       child: Text(
-                        'Create New Account',
+                        'Back to login',
                         style: TextStyle(fontSize: 20.0, fontFamily: 'FredokaLight'),
                       ),
                     ),
@@ -190,4 +189,5 @@ Widget _buildTextField(String hint) {
   );
 }
 
+  
 }
