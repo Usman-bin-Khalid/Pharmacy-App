@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pharmacy_app/widgets/support_widget.dart';
 
 class DetailPage extends StatefulWidget {
@@ -11,7 +12,16 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
+     SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        systemStatusBarContrastEnforced: false,
+      ),
+    );
+
     return Scaffold(
+         extendBodyBehindAppBar: true,
       backgroundColor: Color(0xffd1cfeb),
       body: SingleChildScrollView(
         child: Container(

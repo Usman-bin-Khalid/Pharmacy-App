@@ -84,6 +84,14 @@ flutter:
         - asset: assets/fonts/Poppins-Light.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
+    - family: FredokaBold
+      fonts:
+        - asset: assets/fonts/Fredoka-Bold.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+    - family: FredokaLight
+      fonts:
+        - asset: assets/fonts/Fredoka-Light.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
