@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pharmacy_app/pages/login.dart';
+import 'package:pharmacy_app/services/database.dart';
 import 'package:pharmacy_app/widgets/support_widget.dart';
 import 'package:random_string/random_string.dart';
 
@@ -31,6 +32,16 @@ class _SignupState extends State<Signup> {
         'Email': emailController.text,
         'id': id,
       };
+      await DatabaseMethods().addUserInfo(userInfoMap, id);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(
+            'Account created successfully!',
+            style: AppWidget.whiteTextStyle(20),
+          ),
+        ),
+      );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
