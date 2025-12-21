@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pharmacy_app/pages/login.dart';
 import 'package:pharmacy_app/services/database.dart';
+import 'package:pharmacy_app/services/shared_pref.dart';
 import 'package:pharmacy_app/widgets/support_widget.dart';
 import 'package:random_string/random_string.dart';
 
@@ -33,6 +34,9 @@ class _SignupState extends State<Signup> {
         'id': id,
       };
       await DatabaseMethods().addUserInfo(userInfoMap, id);
+      await SharedprefMethods().saveUserId(id);
+      await SharedprefMethods().saveUserName(name!);
+      await SharedprefMethods().saveUserEmail(email!);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.green,
@@ -201,19 +205,43 @@ class _SignupState extends State<Signup> {
 
                     const SizedBox(height: 20.0),
 
-                    Container(
-                      height: 50,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: const Color(0xfff7bc3c),
-                        borderRadius: BorderRadius.circular(60),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Create Account',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontFamily: 'FredokaBold',
+                    GestureDetector(
+                      onTap: () {
+                        if (nameController.text.isNotEmpty &&
+                            emailController.text.isNotEmpty &&
+                            passwordController.text.isNotEmpty) {
+                          setState(() {
+                           name = nameController.text;
+                           email = emailController.text;
+                           password = passwordController.text;
+                          });
+                          registraion();
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text(
+                                'Please fill all the fields',
+                                style: AppWidget.whiteTextStyle(20),
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      child: Container(
+                        height: 50,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: const Color(0xfff7bc3c),
+                          borderRadius: BorderRadius.circular(60),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Create Account',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontFamily: 'FredokaBold',
+                            ),
                           ),
                         ),
                       ),
