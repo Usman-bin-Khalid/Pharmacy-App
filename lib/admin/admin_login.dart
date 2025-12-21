@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pharmacy_app/pages/home.dart';
 import 'package:pharmacy_app/pages/signup.dart';
+
 class AdminLogin extends StatefulWidget {
   const AdminLogin({super.key});
 
@@ -9,6 +12,8 @@ class AdminLogin extends StatefulWidget {
 }
 
 class _AdminLoginState extends State<AdminLogin> {
+  TextEditingController userNameController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -44,7 +49,7 @@ class _AdminLoginState extends State<AdminLogin> {
                   children: const [
                     SizedBox(height: 60.0),
                     Text(
-                      'Hello',
+                      'Admin Login',
                       style: TextStyle(
                         fontSize: 60.0,
                         color: Colors.black,
@@ -52,9 +57,9 @@ class _AdminLoginState extends State<AdminLogin> {
                       ),
                     ),
                     Text(
-                      'Welcome Back',
+                      'Manage Complete App',
                       style: TextStyle(
-                        fontSize: 40.0,
+                        fontSize: 32.0,
                         color: Colors.black,
                         fontFamily: 'FredokaLight',
                       ),
@@ -88,9 +93,9 @@ class _AdminLoginState extends State<AdminLogin> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const SizedBox(height: 30.0),
-                   Center(
-                      child:  Text(
-                        'Login Account',
+                    Center(
+                      child: Text(
+                        'Unique ID',
                         style: TextStyle(
                           fontSize: 35.0,
                           color: Colors.black,
@@ -108,15 +113,14 @@ class _AdminLoginState extends State<AdminLogin> {
                     ),
                     const SizedBox(height: 30.0),
                     const Text(
-                      'Email Address',
+                      'Username',
                       style: TextStyle(
                         fontSize: 20.0,
                         fontFamily: 'FredokaBold',
                       ),
                     ),
                     const SizedBox(height: 5),
-                    _buildTextField("Your Email Address", 
-                    ),
+                    _buildTextField("Username", userNameController),
                     const SizedBox(height: 30.0),
                     const Text(
                       'Password',
@@ -126,24 +130,12 @@ class _AdminLoginState extends State<AdminLogin> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    _buildTextField("Your Password",),
-                    const SizedBox(height: 10),
-                    const Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        'Forgot Password?',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontFamily: 'FredokaLight',
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 30.0),
+                    _buildTextField("Your Password", passwordController),
+
+                    const SizedBox(height: 40.0),
 
                     GestureDetector(
-                      onTap: () {
-                      
-                      },
+                      onTap: () {},
                       child: Container(
                         height: 50,
                         width: double.infinity,
@@ -151,10 +143,8 @@ class _AdminLoginState extends State<AdminLogin> {
                           color: const Color(0xfff7bc3c),
                           borderRadius: BorderRadius.circular(60),
                         ),
-                        child:  Center(
-                          child: 
-                          
-                          Text(
+                        child: Center(
+                          child: Text(
                             'Login Account',
                             style: TextStyle(
                               fontSize: 20.0,
@@ -164,27 +154,8 @@ class _AdminLoginState extends State<AdminLogin> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 30.0),
-                    Center(
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Signup(),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          'Create New Account',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontFamily: 'FredokaLight',
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 30.0),
+
+                    const SizedBox(height: 20.0),
                   ],
                 ),
               ),
@@ -195,7 +166,7 @@ class _AdminLoginState extends State<AdminLogin> {
     );
   }
 
-  Widget _buildTextField(String hint) {
+  Widget _buildTextField(String hint, TextEditingController controller) {
     return Container(
       padding: const EdgeInsets.only(left: 20),
       decoration: BoxDecoration(
@@ -207,12 +178,49 @@ class _AdminLoginState extends State<AdminLogin> {
         color: Colors.white,
       ),
       child: TextField(
- 
+        controller: controller,
         decoration: InputDecoration(border: InputBorder.none, hintText: hint),
       ),
     );
   }
 
+  loginAdmin() {
+    FirebaseFirestore.instance
+        .collection("Admin")
+        .where("id", isEqualTo: userNameController.text.trim())
+        .where("password", isEqualTo: passwordController.text)
+        .get()
+        .then((value) {
 
-
+          if (value.docs.isNotEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                backgroundColor: Colors.green,
+                content: Text(
+                  'Login Successful',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+            );
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Home()),
+            );
+            print("Login Successful");
+          } else {
+            if(mounted){
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  backgroundColor: Colors.red,
+                  content: Text(
+                    'Invalid Credentials',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                ),
+              );
+            }
+            print("Invalid Credentials");
+          }
+        });
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pharmacy_app/admin/admin_login.dart';
 import 'package:pharmacy_app/pages/detail_page.dart';
 import 'package:pharmacy_app/pages/home.dart';
 import 'package:pharmacy_app/pages/login.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       // home: const Home(),
-      home: Login(),
+      home: AdminLogin(),
     );
   }
 }
