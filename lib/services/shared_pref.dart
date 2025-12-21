@@ -19,4 +19,9 @@ class SharedprefMethods {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.setString(userEmailKey, getUserEmail);
   }
+
+  Future<String?> getUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(userIdKey);
+  } 
 }
