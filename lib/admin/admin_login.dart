@@ -1,51 +1,14 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pharmacy_app/pages/Home.dart';
 import 'package:pharmacy_app/pages/signup.dart';
-import 'package:pharmacy_app/widgets/support_widget.dart';
-
-class Login extends StatefulWidget {
-  const Login({super.key});
+class AdminLogin extends StatefulWidget {
+  const AdminLogin({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<AdminLogin> createState() => _AdminLoginState();
 }
 
-class _LoginState extends State<Login> {
-  TextEditingController emailController = new TextEditingController();
-  TextEditingController passwordController = new TextEditingController();
-  String? email, password;
-  bool loading = false;
-  userLogin() async {
-    setState(() {
-      loading = true;
-    });
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email!,
-        password: password!,
-      );
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Home()),
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'invalid-credential') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.red,
-            content: Text(
-              'You have entered invalid credentials',
-              style: AppWidget.whiteTextStyle(20),
-            ),
-          ),
-        );
-      } 
-    }
-  }
-
+class _AdminLoginState extends State<AdminLogin> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -152,7 +115,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    _buildTextField("Your Email Address", emailController
+                    _buildTextField("Your Email Address", 
                     ),
                     const SizedBox(height: 30.0),
                     const Text(
@@ -163,7 +126,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    _buildTextField("Your Password", passwordController),
+                    _buildTextField("Your Password",),
                     const SizedBox(height: 10),
                     const Align(
                       alignment: Alignment.centerRight,
@@ -179,24 +142,7 @@ class _LoginState extends State<Login> {
 
                     GestureDetector(
                       onTap: () {
-                        if (emailController.text.isNotEmpty &&
-                            passwordController.text.isNotEmpty) {
-                          setState(() {
-                            email = emailController.text;
-                            password = passwordController.text;
-                          });
-                          userLogin();
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              backgroundColor: Colors.red,
-                              content: Text(
-                                'Please fill all the fields',
-                                style: AppWidget.whiteTextStyle(20),
-                              ),
-                            ),
-                          );
-                        }
+                      
                       },
                       child: Container(
                         height: 50,
@@ -207,12 +153,7 @@ class _LoginState extends State<Login> {
                         ),
                         child:  Center(
                           child: 
-                          loading ? Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                        ),
-                      ) :
+                          
                           Text(
                             'Login Account',
                             style: TextStyle(
@@ -254,7 +195,7 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget _buildTextField(String hint, TextEditingController controller) {
+  Widget _buildTextField(String hint) {
     return Container(
       padding: const EdgeInsets.only(left: 20),
       decoration: BoxDecoration(
@@ -266,7 +207,7 @@ class _LoginState extends State<Login> {
         color: Colors.white,
       ),
       child: TextField(
-        controller: controller,
+ 
         decoration: InputDecoration(border: InputBorder.none, hintText: hint),
       ),
     );
