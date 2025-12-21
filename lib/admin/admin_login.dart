@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pharmacy_app/admin/add_product.dart';
 import 'package:pharmacy_app/pages/home.dart';
 import 'package:pharmacy_app/pages/signup.dart';
 
@@ -14,6 +15,7 @@ class AdminLogin extends StatefulWidget {
 class _AdminLoginState extends State<AdminLogin> {
   TextEditingController userNameController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
+  bool loading = false;
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -51,7 +53,7 @@ class _AdminLoginState extends State<AdminLogin> {
                     Text(
                       'Admin Login',
                       style: TextStyle(
-                        fontSize: 60.0,
+                        fontSize: 55.0,
                         color: Colors.black,
                         fontFamily: 'FredokaBold',
                       ),
@@ -67,6 +69,8 @@ class _AdminLoginState extends State<AdminLogin> {
                   ],
                 ),
               ),
+
+
 
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -135,7 +139,25 @@ class _AdminLoginState extends State<AdminLogin> {
                     const SizedBox(height: 40.0),
 
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        if (userNameController.text.isEmpty ||
+                            passwordController.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text(
+                                'Please fill all the fields',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+                        loginAdmin();
+                      },
                       child: Container(
                         height: 50,
                         width: double.infinity,
@@ -144,13 +166,18 @@ class _AdminLoginState extends State<AdminLogin> {
                           borderRadius: BorderRadius.circular(60),
                         ),
                         child: Center(
-                          child: Text(
-                            'Login Account',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: 'FredokaBold',
-                            ),
-                          ),
+                          child: loading
+                              ? Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: CircularProgressIndicator(color: Colors.white),
+                              )
+                              : Text(
+                                  'Login Account',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontFamily: 'FredokaBold',
+                                  ),
+                                ),
                         ),
                       ),
                     ),
@@ -159,6 +186,8 @@ class _AdminLoginState extends State<AdminLogin> {
                   ],
                 ),
               ),
+           
+           
             ],
           ),
         ),
@@ -184,14 +213,19 @@ class _AdminLoginState extends State<AdminLogin> {
     );
   }
 
+
+
+
   loginAdmin() {
+    setState(() {
+      loading = true;
+    });
     FirebaseFirestore.instance
         .collection("Admin")
         .where("id", isEqualTo: userNameController.text.trim())
         .where("password", isEqualTo: passwordController.text)
         .get()
         .then((value) {
-
           if (value.docs.isNotEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -204,11 +238,11 @@ class _AdminLoginState extends State<AdminLogin> {
             );
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => Home()),
+              MaterialPageRoute(builder: (context) => AddProduct()),
             );
             print("Login Successful");
           } else {
-            if(mounted){
+            if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   backgroundColor: Colors.red,
