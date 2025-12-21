@@ -33,10 +33,12 @@ class _SignupState extends State<Signup> {
         'Email': emailController.text,
         'id': id,
       };
-      await DatabaseMethods().addUserInfo(userInfoMap, id);
+  
       await SharedprefMethods().saveUserId(id);
       await SharedprefMethods().saveUserName(name!);
       await SharedprefMethods().saveUserEmail(email!);
+      await DatabaseMethods().addUserInfo(userInfoMap, id);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login()));
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.green,
@@ -235,8 +237,13 @@ class _SignupState extends State<Signup> {
                           color: const Color(0xfff7bc3c),
                           borderRadius: BorderRadius.circular(60),
                         ),
-                        child: const Center(
-                          child: Text(
+                        child:  Center(
+                          child: loading ? Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          ): Text(
                             'Create Account',
                             style: TextStyle(
                               fontSize: 20.0,
