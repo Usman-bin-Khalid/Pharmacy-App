@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:pharmacy_app/pages/home.dart';
@@ -35,7 +34,8 @@ class _BottomNavState extends State<BottomNav> {
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
         height: 60,
-        backgroundColor: Color.fromARGB(253, 280, 193, 181),
+        color: Colors.black,
+        backgroundColor: Color.fromARGB(253, 184, 182, 218),
         animationDuration: Duration(milliseconds: 500),
         onTap: (int index) {
           setState(() {
@@ -43,10 +43,10 @@ class _BottomNavState extends State<BottomNav> {
           });
         },
         items: [
-          currentTabIndex == 0 ? Icon(Icons.home, color: Colors.white) : Icon(Icons.home) ,
-          currentTabIndex == 1 ? Icon(Icons.home, color: Colors.white) : Icon(Icons.home),
-          currentTabIndex == 2 ? Icon(Icons.home, color: Colors.white) : Icon(Icons.home),
-          currentTabIndex == 3 ? Icon(Icons.home, color: Colors.white) : Icon(Icons.home)   
+          currentTabIndex == 0 ? Icon(Icons.home, size: 30, color: Colors.white) : Icon(Icons.home, color: Colors.white,) ,
+          currentTabIndex == 1 ? Icon(Icons.shopping_bag, color: Colors.white) : Icon(Icons.shopping_bag, color: Colors.white,),
+          currentTabIndex == 2 ? Icon(Icons.wallet, size: 30, color: Colors.white) : Icon(Icons.wallet, color: Colors.white,),
+          currentTabIndex == 3 ? Icon(Icons.person, size : 30,color: Colors.white) : Icon(Icons.person, color: Colors.white,)   
         ],
       ),
       body: pages[currentTabIndex],
