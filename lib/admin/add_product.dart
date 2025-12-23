@@ -128,6 +128,43 @@ class _AddProductState extends State<AddProduct> {
                       
                     ),
                   ),
+                     SizedBox(height: 15),
+                  const Text(
+                    'Company Name',
+                    style: TextStyle(fontSize: 20.0, fontFamily: 'FredokaBold'),
+                  ),
+                  const SizedBox(height: 5),
+                  _buildTextField("Company Name"),
+                    SizedBox(height: 15),
+                  const Text(
+                    'Product Description',
+                    style: TextStyle(fontSize: 20.0, fontFamily: 'FredokaBold'),
+                  ),
+                  const SizedBox(height: 5),
+                  _buildTextFieldDescription("Write something about Product..."),
+                   const SizedBox(height: 20.0),
+
+                    GestureDetector(
+                     onTap: (){},
+                      child: Container(
+                        height: 50,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: const Color(0xfff7bc3c),
+                          borderRadius: BorderRadius.circular(60),
+                        ),
+                        child: Center(
+                          child: Text(
+                                  'Add Product',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontFamily: 'FredokaBold',
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+
                 ],
               ),
             ),
@@ -153,4 +190,26 @@ class _AddProductState extends State<AddProduct> {
       ),
     );
   }
+
+ Widget _buildTextFieldDescription(String hint) {
+    return Container(
+      padding: const EdgeInsets.only(left: 20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20.0),
+        border: Border.all(
+          color: const Color.fromARGB(85, 0, 0, 0),
+          width: 1.5,
+        ),
+        color: Colors.white,
+      ),
+      child: TextField(
+        maxLines: 5,
+        decoration: InputDecoration(border: InputBorder.none, hintText: hint),
+      ),
+    );
+  }
+
+
+
+
 }
