@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pharmacy_app/services/database.dart';
 import 'package:pharmacy_app/widgets/support_widget.dart';
 
 class AddProduct extends StatefulWidget {
@@ -80,7 +81,7 @@ class _AddProductState extends State<AddProduct> {
                     style: TextStyle(fontSize: 20.0, fontFamily: 'FredokaBold'),
                   ),
                   const SizedBox(height: 5),
-                  _buildTextField("Product Name" , productNameController),
+                  _buildTextField("Product Name", productNameController),
 
                   SizedBox(height: 15),
                   const Text(
@@ -143,12 +144,46 @@ class _AddProductState extends State<AddProduct> {
                   const SizedBox(height: 5),
                   _buildTextFieldDescription(
                     "Write something about Product...",
-                      descController,
+                    descController,
                   ),
                   const SizedBox(height: 20.0),
 
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () async {
+                      if (productNameController.text != "" &&
+                          productPriceController.text != "" &&
+                          value != "" &&
+                          companyNameController.text != "" &&
+                          descController.text != "") {
+                        Map<String, dynamic> addProduct = {
+                          'Name': productNameController.text.trim(),
+                          'Price': productPriceController.text.trim(),
+                          'Category': value,
+                          'CompanyName': companyNameController.text.trim(),
+                          'Description': descController.text.trim(),
+                        };
+                        await DatabaseMethods().addProduct(addProduct);
+                         ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(
+            'Product Added Successfully!',
+            style: AppWidget.whiteTextStyle(20),
+          ),
+        ),
+      );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.red,
+                            content: Text(
+                              'Please Fill all the Details...',
+                              style: AppWidget.whiteTextStyle(20),
+                            ),
+                          ),
+                        );
+                      }
+                    },
                     child: Container(
                       height: 50,
                       width: double.infinity,
@@ -194,7 +229,10 @@ class _AddProductState extends State<AddProduct> {
     );
   }
 
-  Widget _buildTextFieldDescription(String hint, TextEditingController controller) {
+  Widget _buildTextFieldDescription(
+    String hint,
+    TextEditingController controller,
+  ) {
     return Container(
       padding: const EdgeInsets.only(left: 20),
       decoration: BoxDecoration(
