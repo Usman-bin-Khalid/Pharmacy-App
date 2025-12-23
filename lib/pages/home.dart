@@ -175,7 +175,7 @@ class _HomeState extends State<Home> {
                             suffixIcon: Container(
                               margin: EdgeInsets.all(3),
                               width: 100,
-      
+
                               decoration: BoxDecoration(
                                 color: Colors.black,
                                 borderRadius: BorderRadius.circular(30),
@@ -190,22 +190,24 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-      
+
             SizedBox(height: 30.0),
             Container(
               height: 50,
-      
+
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
                   allMedicine
                       ? AppWidget.selectedCategory('All Medicines')
                       : GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             allMedicine = true;
                             suppliment = false;
                             vitamins = false;
                             herbal = false;
+                            productStream = await DatabaseMethods()
+                                .getAllProducts('Medicine');
                             setState(() {});
                           },
                           child: Container(
@@ -222,11 +224,13 @@ class _HomeState extends State<Home> {
                   suppliment
                       ? AppWidget.selectedCategory('Suppliment')
                       : GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             allMedicine = false;
                             suppliment = true;
                             vitamins = false;
                             herbal = false;
+                            productStream = await DatabaseMethods()
+                                .getAllProducts('Suppliments');
                             setState(() {});
                           },
                           child: Container(
@@ -243,11 +247,13 @@ class _HomeState extends State<Home> {
                   vitamins
                       ? AppWidget.selectedCategory('Vitamins')
                       : GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             allMedicine = false;
                             vitamins = true;
                             suppliment = false;
                             herbal = false;
+                              productStream = await DatabaseMethods()
+                                .getAllProducts('Vitamins');
                             setState(() {});
                           },
                           child: Container(
@@ -264,11 +270,13 @@ class _HomeState extends State<Home> {
                   herbal
                       ? AppWidget.selectedCategory('Herbal')
                       : GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             allMedicine = false;
                             vitamins = false;
                             suppliment = false;
                             herbal = true;
+                             productStream = await DatabaseMethods()
+                                .getAllProducts('Herbal');
                             setState(() {});
                           },
                           child: Container(
@@ -285,7 +293,7 @@ class _HomeState extends State<Home> {
               ),
             ),
             SizedBox(height: 20.0),
-      Expanded(child: allProducts())
+            Expanded(child: allProducts()),
           ],
         ),
       ),
