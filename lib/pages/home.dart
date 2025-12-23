@@ -177,7 +177,7 @@ class _HomeState extends State<Home> {
                           textAlignVertical: TextAlignVertical
                               .center, // text ko center mai lany ky liy
                           decoration: InputDecoration(
-                            hintText: 'Search Medicine...',
+                            hintText: '  Search Medicine...',
                             hintStyle: AppWidget.lightTextStyle(15.0),
                             border: InputBorder.none,
                             suffixIcon: Container(
@@ -192,6 +192,8 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                         ),
+                     
+                     
                       ),
                     ),
                   ),
