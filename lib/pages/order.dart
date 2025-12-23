@@ -20,7 +20,10 @@ class _OrderPageState extends State<OrderPage> {
             Text('Order Page' , style: AppWidget.headlineTextStyle(25),),
             SizedBox(height: 20,),
             Container(
+              padding: EdgeInsets.all(10),
+              margin: EdgeInsets.only(right: 20),
               decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
                 color: Color.fromARGB(255, 225, 219, 248),
               ),
               child: Row(
@@ -37,7 +40,9 @@ class _OrderPageState extends State<OrderPage> {
                             Color(0xffddd7cd),
                             Color(0xffa59c8f),
                           ],
-                      ),
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: Image.asset('assets/images/medicine.png',
@@ -48,6 +53,7 @@ class _OrderPageState extends State<OrderPage> {
                   ),
                   SizedBox(width: 20,),
                   Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Paracitamol' , style: AppWidget.headlineTextStyle(18),),
