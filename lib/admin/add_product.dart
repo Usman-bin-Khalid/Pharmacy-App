@@ -85,23 +85,30 @@ class _AddProductState extends State<AddProduct> {
                   ),
                   const SizedBox(height: 5),
                   _buildTextField("Product Price"),
-                   SizedBox(height: 20),
+                   SizedBox(height: 15),
                   const Text(
                     'Product Category',
                     style: TextStyle(fontSize: 20.0, fontFamily: 'FredokaBold'),
                   ),
                    const SizedBox(height: 5),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(60.0),
+                       border: Border.all(
+          color: const Color.fromARGB(85, 0, 0, 0),
+          width: 1.5,
+        ),
                     ),
-                    child: DropdownButton(
+                    child: DropdownButton<String>(
+                      
                       items: productCategories
                           .map(
                             (item) => DropdownMenuItem(
+                            
+                                         value: item,
                               child: Text(
                                 item,
                                 style: AppWidget.headlineTextStyle(18.0),
@@ -117,6 +124,7 @@ class _AddProductState extends State<AddProduct> {
                       iconSize: 34,
                       icon: Icon(Icons.arrow_drop_down, color: Colors.black,),
                       value: value,
+                      
                       
                     ),
                   ),
