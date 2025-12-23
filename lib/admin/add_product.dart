@@ -9,6 +9,10 @@ class AddProduct extends StatefulWidget {
 }
 
 class _AddProductState extends State<AddProduct> {
+  TextEditingController productNameController = new TextEditingController();
+  TextEditingController productPriceController = new TextEditingController();
+  TextEditingController companyNameController = new TextEditingController();
+  TextEditingController descController = new TextEditingController();
   final List<String> productCategories = [
     'Medicine',
     'Suppliments',
@@ -76,7 +80,7 @@ class _AddProductState extends State<AddProduct> {
                     style: TextStyle(fontSize: 20.0, fontFamily: 'FredokaBold'),
                   ),
                   const SizedBox(height: 5),
-                  _buildTextField("Product Name"),
+                  _buildTextField("Product Name" , productNameController),
 
                   SizedBox(height: 15),
                   const Text(
@@ -84,31 +88,29 @@ class _AddProductState extends State<AddProduct> {
                     style: TextStyle(fontSize: 20.0, fontFamily: 'FredokaBold'),
                   ),
                   const SizedBox(height: 5),
-                  _buildTextField("Product Price"),
-                   SizedBox(height: 15),
+                  _buildTextField("Product Price", productPriceController),
+                  SizedBox(height: 15),
                   const Text(
                     'Product Category',
                     style: TextStyle(fontSize: 20.0, fontFamily: 'FredokaBold'),
                   ),
-                   const SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(60.0),
-                       border: Border.all(
-          color: const Color.fromARGB(85, 0, 0, 0),
-          width: 1.5,
-        ),
+                      border: Border.all(
+                        color: const Color.fromARGB(85, 0, 0, 0),
+                        width: 1.5,
+                      ),
                     ),
                     child: DropdownButton<String>(
-                      
                       items: productCategories
                           .map(
                             (item) => DropdownMenuItem(
-                            
-                                         value: item,
+                              value: item,
                               child: Text(
                                 item,
                                 style: AppWidget.headlineTextStyle(18.0),
@@ -122,49 +124,49 @@ class _AddProductState extends State<AddProduct> {
                       dropdownColor: Colors.white,
                       hint: Text('Select Category'),
                       iconSize: 34,
-                      icon: Icon(Icons.arrow_drop_down, color: Colors.black,),
+                      icon: Icon(Icons.arrow_drop_down, color: Colors.black),
                       value: value,
-                      
-                      
                     ),
                   ),
-                     SizedBox(height: 15),
+                  SizedBox(height: 15),
                   const Text(
                     'Company Name',
                     style: TextStyle(fontSize: 20.0, fontFamily: 'FredokaBold'),
                   ),
                   const SizedBox(height: 5),
-                  _buildTextField("Company Name"),
-                    SizedBox(height: 15),
+                  _buildTextField("Company Name", companyNameController),
+                  SizedBox(height: 15),
                   const Text(
                     'Product Description',
                     style: TextStyle(fontSize: 20.0, fontFamily: 'FredokaBold'),
                   ),
                   const SizedBox(height: 5),
-                  _buildTextFieldDescription("Write something about Product..."),
-                   const SizedBox(height: 20.0),
+                  _buildTextFieldDescription(
+                    "Write something about Product...",
+                      descController,
+                  ),
+                  const SizedBox(height: 20.0),
 
-                    GestureDetector(
-                     onTap: (){},
-                      child: Container(
-                        height: 50,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: const Color(0xfff7bc3c),
-                          borderRadius: BorderRadius.circular(60),
-                        ),
-                        child: Center(
-                          child: Text(
-                                  'Add Product',
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontFamily: 'FredokaBold',
-                                  ),
-                                ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      height: 50,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: const Color(0xfff7bc3c),
+                        borderRadius: BorderRadius.circular(60),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Add Product',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontFamily: 'FredokaBold',
+                          ),
                         ),
                       ),
                     ),
-
+                  ),
                 ],
               ),
             ),
@@ -174,7 +176,7 @@ class _AddProductState extends State<AddProduct> {
     );
   }
 
-  Widget _buildTextField(String hint) {
+  Widget _buildTextField(String hint, TextEditingController controller) {
     return Container(
       padding: const EdgeInsets.only(left: 20),
       decoration: BoxDecoration(
@@ -186,12 +188,13 @@ class _AddProductState extends State<AddProduct> {
         color: Colors.white,
       ),
       child: TextField(
+        controller: controller,
         decoration: InputDecoration(border: InputBorder.none, hintText: hint),
       ),
     );
   }
 
- Widget _buildTextFieldDescription(String hint) {
+  Widget _buildTextFieldDescription(String hint, TextEditingController controller) {
     return Container(
       padding: const EdgeInsets.only(left: 20),
       decoration: BoxDecoration(
@@ -203,13 +206,10 @@ class _AddProductState extends State<AddProduct> {
         color: Colors.white,
       ),
       child: TextField(
+        controller: controller,
         maxLines: 5,
         decoration: InputDecoration(border: InputBorder.none, hintText: hint),
       ),
     );
   }
-
-
-
-
 }
