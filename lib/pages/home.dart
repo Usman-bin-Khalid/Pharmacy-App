@@ -15,6 +15,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   bool allMedicine = true, suppliment = false, herbal = false, vitamins = false;
   Stream? productStream;
+  
   getOntheload() async {
     productStream = await DatabaseMethods().getAllProducts('Medicine');
     setState(() {});
@@ -34,7 +35,13 @@ class _HomeState extends State<Home> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => DetailPage()),
+                        MaterialPageRoute(
+                          builder: (context) => DetailPage(
+                            name: ds['Name'],
+                            detail: ds['Description'],
+                            price: ds['Price'],
+                          ),
+                        ),
                       );
                     },
                     child: Container(
@@ -119,6 +126,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     getOntheload();
+    
     super.initState();
   }
 
@@ -252,7 +260,7 @@ class _HomeState extends State<Home> {
                             vitamins = true;
                             suppliment = false;
                             herbal = false;
-                              productStream = await DatabaseMethods()
+                            productStream = await DatabaseMethods()
                                 .getAllProducts('Vitamins');
                             setState(() {});
                           },
@@ -275,7 +283,7 @@ class _HomeState extends State<Home> {
                             vitamins = false;
                             suppliment = false;
                             herbal = true;
-                             productStream = await DatabaseMethods()
+                            productStream = await DatabaseMethods()
                                 .getAllProducts('Herbal');
                             setState(() {});
                           },
