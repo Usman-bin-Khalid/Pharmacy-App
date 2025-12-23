@@ -9,7 +9,7 @@ class DatabaseMethods {
   }
   Future addProduct(Map<String, dynamic> productInfoMap) {
       return FirebaseFirestore.instance
-          .collection("pharmacy_users")
+          .collection("Products")
           
           .add(productInfoMap);
   }

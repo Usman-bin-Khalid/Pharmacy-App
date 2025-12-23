@@ -163,15 +163,15 @@ class _AddProductState extends State<AddProduct> {
                           'Description': descController.text.trim(),
                         };
                         await DatabaseMethods().addProduct(addProduct);
-                         ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.green,
-          content: Text(
-            'Product Added Successfully!',
-            style: AppWidget.whiteTextStyle(20),
-          ),
-        ),
-      );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.green,
+                            content: Text(
+                              'Product Added Successfully!',
+                              style: AppWidget.whiteTextStyle(20),
+                            ),
+                          ),
+                        );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
