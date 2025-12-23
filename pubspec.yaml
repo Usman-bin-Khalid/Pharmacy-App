@@ -39,6 +39,7 @@ dependencies:
   firebase_auth: ^6.1.2
   shared_preferences: ^2.5.3
   random_string: ^2.3.1
+  curved_navigation_bar: ^1.0.6
 
 dev_dependencies:
   flutter_test:
