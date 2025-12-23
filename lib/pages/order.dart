@@ -27,10 +27,11 @@ class _OrderPageState extends State<OrderPage> {
                 color: Color.fromARGB(255, 225, 219, 248),
               ),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(right: 30),
+                  
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       
@@ -51,7 +52,7 @@ class _OrderPageState extends State<OrderPage> {
                   fit: BoxFit.fill,
                     ),
                   ),
-                  SizedBox(width: 20,),
+                  SizedBox(width: 15,),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,

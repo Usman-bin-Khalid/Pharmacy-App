@@ -138,7 +138,7 @@ class _WalletState extends State<Wallet> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Image.asset("assets/images/cashback.png", width: 50,height: 50,),
+          Image.asset("assets/images/cashback.png", width: 45,height: 45,),
           Text("\$ 200" , style: AppWidget.headlineTextStyle(18),),
           Container(
             width: 100,
@@ -146,7 +146,7 @@ class _WalletState extends State<Wallet> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
               color: Colors.green.withOpacity(0.3)),
-            child: Text("CREDIT", style: AppWidget.headlineTextStyle(13),),
+            child: Center(child: Text("CREDIT", style: AppWidget.headlineTextStyle(13),)),
           ),
         ],
       ),
@@ -164,7 +164,7 @@ class _WalletState extends State<Wallet> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Image.asset("assets/images/credit-card-payment.png",  width: 50,height: 50,),
+          Image.asset("assets/images/credit-card-payment.png",  width: 45,height: 45,),
           Text("\$ 200" , style: AppWidget.headlineTextStyle(18),),
           Container(
             width: 100,
@@ -172,7 +172,7 @@ class _WalletState extends State<Wallet> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
               color: Colors.blue.withOpacity(0.3)),
-            child: Text("DEBIT", style: AppWidget.headlineTextStyle(13),),
+            child: Center(child: Text("DEBIT", style: AppWidget.headlineTextStyle(13),)),
           ),
         ],
       ),
