@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pharmacy_app/admin/admin_login.dart';
 import 'package:pharmacy_app/pages/bottom_nav.dart';
 import 'package:pharmacy_app/pages/signup.dart';
 import 'package:pharmacy_app/services/shared_pref.dart';
@@ -104,14 +105,22 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 child: Column(
-                  children: const [
+                  children: [
                     SizedBox(height: 60.0),
-                    Text(
-                      'Hello',
-                      style: TextStyle(
-                        fontSize: 60.0,
-                        color: Colors.black,
-                        fontFamily: 'FredokaBold',
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AdminLogin()),
+                        );
+                      },
+                      child: Text(
+                        'Hello',
+                        style: TextStyle(
+                          fontSize: 60.0,
+                          color: Colors.black,
+                          fontFamily: 'FredokaBold',
+                        ),
                       ),
                     ),
                     Text(
