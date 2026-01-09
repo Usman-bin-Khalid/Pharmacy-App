@@ -7,7 +7,14 @@ class DatabaseMethods {
         .doc(id)
         .set(userInfoMap);
   }
-
+// Inside your DatabaseMethods class
+search(String name, String category) async {
+  return FirebaseFirestore.instance
+      .collection(category)
+      .where('Name', isGreaterThanOrEqualTo: name)
+      .where('Name', isLessThanOrEqualTo: name + '\uf8ff')
+      .snapshots();
+}
   Future addProduct(Map<String, dynamic> productInfoMap) {
     return FirebaseFirestore.instance
         .collection("Products")
