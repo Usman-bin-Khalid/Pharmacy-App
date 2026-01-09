@@ -1,15 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pharmacy_app/services/database.dart';
+import 'package:pharmacy_app/services/shared_pref.dart';
 import 'package:pharmacy_app/widgets/support_widget.dart';
 
 class DetailPage extends StatefulWidget {
-  final String name, detail, price;
+  final String name, detail, price, company, image;
 
   const DetailPage({
     super.key,
     required this.name,
     required this.detail,
     required this.price,
+    required this.company,
+    required this.image,
   });
 
   @override
@@ -19,9 +24,25 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   int quantity = 1;
   double totalPrice = 0.0;
+  String? id, wallet;
+
+  getthesharedpref() async {
+    id = await SharedprefMethods().getUserId();
+    setState(() {});
+  }
+
+  getontheload() async {
+    await getthesharedpref();
+    if (id != null) {
+      DocumentSnapshot snapshot = await DatabaseMethods().getUserDetails(id!);
+      wallet = snapshot["Wallet"];
+    }
+    setState(() {});
+  }
 
   @override
   void initState() {
+    getontheload();
     totalPrice = double.parse(widget.price);
     super.initState();
   }
@@ -66,11 +87,17 @@ class _DetailPageState extends State<DetailPage> {
                 ),
               ),
 
-              Image.asset(
-                'assets/images/medicine.png',
-                height: MediaQuery.of(context).size.height / 2.5,
-                fit: BoxFit.fill,
-              ),
+              widget.image.startsWith("assets/")
+                  ? Image.asset(
+                      widget.image,
+                      height: MediaQuery.of(context).size.height / 2.5,
+                      fit: BoxFit.fill,
+                    )
+                  : Image.network(
+                      widget.image,
+                      height: MediaQuery.of(context).size.height / 2.5,
+                      fit: BoxFit.fill,
+                    ),
               Container(
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.only(left: 30.0, right: 30.0),
@@ -157,24 +184,70 @@ class _DetailPageState extends State<DetailPage> {
                                 style: AppWidget.lightTextStyle(18),
                               ),
                               Text(
-                                '\$'+ totalPrice.toStringAsFixed(2),
+                                '\$' + totalPrice.toStringAsFixed(2),
                                 style: AppWidget.headlineTextStyle(20),
                               ),
                             ],
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Order Now',
-                                style: AppWidget.whiteTextStyle(20.0),
+                          GestureDetector(
+                            onTap: () async {
+                              if (wallet != null) {
+                                if (double.parse(wallet!) >= totalPrice) {
+                                  double amount =
+                                      double.parse(wallet!) - totalPrice;
+                                  await DatabaseMethods().updateUserWallet(
+                                    id!,
+                                    amount.toString(),
+                                  );
+                                  await DatabaseMethods().addTransaction({
+                                    "amount": totalPrice.toString(),
+                                    "type": "Debit",
+                                    "time": DateTime.now().toIso8601String(),
+                                  }, id!);
+                                  Map<String, dynamic> orderInfoMap = {
+                                    "Product": widget.name,
+                                    "Price": widget.price,
+                                    "Quantity": quantity.toString(),
+                                    "Total": totalPrice.toString(),
+                                    "Image": widget.image,
+                                    "Name": widget.company,
+                                  };
+                                  await DatabaseMethods().addOrder(
+                                    orderInfoMap,
+                                    id!,
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      backgroundColor: Colors.green,
+                                      content: Text(
+                                        "Order Placed Successfully!",
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      backgroundColor: Colors.red,
+                                      content: Text("Insufficient Balance!"),
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Order Now',
+                                  style: AppWidget.whiteTextStyle(20.0),
+                                ),
                               ),
                             ),
                           ),

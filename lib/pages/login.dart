@@ -1,9 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pharmacy_app/pages/Home.dart';
+import 'package:pharmacy_app/pages/bottom_nav.dart';
 import 'package:pharmacy_app/pages/signup.dart';
+import 'package:pharmacy_app/services/shared_pref.dart';
 import 'package:pharmacy_app/widgets/support_widget.dart';
 
 class Login extends StatefulWidget {
@@ -23,15 +24,30 @@ class _LoginState extends State<Login> {
       loading = true;
     });
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email!,
-        password: password!,
-      );
-      Navigator.push(
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email!, password: password!);
+
+      // Fetch user details from Firestore to get the ID and Name
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .where("Email", isEqualTo: email!)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        DocumentSnapshot userDoc = querySnapshot.docs[0];
+        await SharedprefMethods().saveUserId(userDoc["id"]);
+        await SharedprefMethods().saveUserName(userDoc["Name"]);
+        await SharedprefMethods().saveUserEmail(userDoc["Email"]);
+      }
+
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const Home()),
+        MaterialPageRoute(builder: (context) => const BottomNav()),
       );
     } on FirebaseAuthException catch (e) {
+      setState(() {
+        loading = false;
+      });
       if (e.code == 'invalid-credential') {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -42,7 +58,17 @@ class _LoginState extends State<Login> {
             ),
           ),
         );
-      } 
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+              e.message ?? 'An error occurred',
+              style: AppWidget.whiteTextStyle(20),
+            ),
+          ),
+        );
+      }
     }
   }
 
@@ -125,8 +151,8 @@ class _LoginState extends State<Login> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const SizedBox(height: 30.0),
-                   Center(
-                      child:  Text(
+                    Center(
+                      child: Text(
                         'Login Account',
                         style: TextStyle(
                           fontSize: 35.0,
@@ -152,8 +178,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    _buildTextField("Your Email Address", emailController
-                    ),
+                    _buildTextField("Your Email Address", emailController),
                     const SizedBox(height: 30.0),
                     const Text(
                       'Password',
@@ -205,21 +230,21 @@ class _LoginState extends State<Login> {
                           color: const Color(0xfff7bc3c),
                           borderRadius: BorderRadius.circular(60),
                         ),
-                        child:  Center(
-                          child: 
-                          loading ? Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                        ),
-                      ) :
-                          Text(
-                            'Login Account',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: 'FredokaBold',
-                            ),
-                          ),
+                        child: Center(
+                          child: loading
+                              ? Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Text(
+                                  'Login Account',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontFamily: 'FredokaBold',
+                                  ),
+                                ),
                         ),
                       ),
                     ),
@@ -271,7 +296,4 @@ class _LoginState extends State<Login> {
       ),
     );
   }
-
-
-
 }

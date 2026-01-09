@@ -15,7 +15,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   bool allMedicine = true, suppliment = false, herbal = false, vitamins = false;
   Stream? productStream;
-  
+
   getOntheload() async {
     productStream = await DatabaseMethods().getAllProducts('Medicine');
     setState(() {});
@@ -40,6 +40,9 @@ class _HomeState extends State<Home> {
                             name: ds['Name'],
                             detail: ds['Description'],
                             price: ds['Price'],
+                            company: ds['CompanyName'],
+                            image:
+                                "assets/images/medicine.png", // Using static image for now
                           ),
                         ),
                       );
@@ -126,7 +129,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     getOntheload();
-    
+
     super.initState();
   }
 
@@ -192,8 +195,6 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                         ),
-                     
-                     
                       ),
                     ),
                   ),

@@ -5,7 +5,6 @@ import 'package:pharmacy_app/pages/login.dart';
 import 'package:pharmacy_app/services/database.dart';
 import 'package:pharmacy_app/services/shared_pref.dart';
 import 'package:pharmacy_app/widgets/support_widget.dart';
-import 'package:random_string/random_string.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -27,18 +26,22 @@ class _SignupState extends State<Signup> {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email!, password: password!);
-      String id = randomAlphaNumeric(10);
+      String id = userCredential.user!.uid;
       Map<String, dynamic> userInfoMap = {
         'Name': nameController.text,
         'Email': emailController.text,
         'id': id,
+        'Wallet': '0',
       };
-  
+
       await SharedprefMethods().saveUserId(id);
       await SharedprefMethods().saveUserName(name!);
       await SharedprefMethods().saveUserEmail(email!);
       await DatabaseMethods().addUserInfo(userInfoMap, id);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login()));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Login()),
+      );
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.green,
@@ -202,6 +205,7 @@ class _SignupState extends State<Signup> {
                         fontFamily: 'FredokaBold',
                       ),
                     ),
+
                     const SizedBox(height: 5),
                     _buildTextField("Your Password", passwordController),
 
@@ -213,9 +217,9 @@ class _SignupState extends State<Signup> {
                             emailController.text.isNotEmpty &&
                             passwordController.text.isNotEmpty) {
                           setState(() {
-                           name = nameController.text;
-                           email = emailController.text;
-                           password = passwordController.text;
+                            name = nameController.text;
+                            email = emailController.text;
+                            password = passwordController.text;
                           });
                           registraion();
                         } else {
@@ -237,19 +241,21 @@ class _SignupState extends State<Signup> {
                           color: const Color(0xfff7bc3c),
                           borderRadius: BorderRadius.circular(60),
                         ),
-                        child:  Center(
-                          child: loading ? Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                            ),
-                          ): Text(
-                            'Create Account',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: 'FredokaBold',
-                            ),
-                          ),
+                        child: Center(
+                          child: loading
+                              ? Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Text(
+                                  'Create Account',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontFamily: 'FredokaBold',
+                                  ),
+                                ),
                         ),
                       ),
                     ),

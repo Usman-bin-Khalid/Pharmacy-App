@@ -40,8 +40,9 @@ dependencies:
   shared_preferences: ^2.5.3
   random_string: ^2.3.1
   curved_navigation_bar: ^1.0.6
-  flutter_stripe: ^12.1.1
+  meta: ^1.11.0
   http: ^1.6.0
+  razorpay_flutter: ^1.4.0
 
 dev_dependencies:
   flutter_test:
