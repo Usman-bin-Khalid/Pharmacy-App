@@ -23,11 +23,10 @@ class _HomeState extends State<Home> {
     productStream = await DatabaseMethods().getAllProducts(selectedCategory);
     setState(() {});
   }
+  
+   
 
-  getOnLoad() async {
-    productStream = await DatabaseMethods().getAllProducts(selectedCategory);
-  }
-
+  
   // Search function
   searchProducts(String name) async {
     productStream = await DatabaseMethods().search(name, selectedCategory);
