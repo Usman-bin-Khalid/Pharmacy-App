@@ -11,17 +11,21 @@ class Home extends StatefulWidget {
   @override
   State<Home> createState() => _HomeState();
 }
+
 class _HomeState extends State<Home> {
   bool allMedicine = true, suppliment = false, herbal = false, vitamins = false;
   Stream? productStream;
   String selectedCategory = "Medicine";
-  
-  // 1. Search Logic
+
   TextEditingController searchController = TextEditingController();
 
   getOntheload() async {
     productStream = await DatabaseMethods().getAllProducts(selectedCategory);
     setState(() {});
+  }
+
+  getOnLoad() async {
+    productStream = await DatabaseMethods().getAllProducts(selectedCategory);
   }
 
   // Search function
@@ -36,8 +40,6 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
-  // 2. Beautiful Category Tab Builder
-
   Widget categoryTab(String title, bool isActive, Function onTap) {
     return GestureDetector(
       onTap: () => onTap(),
@@ -48,7 +50,7 @@ class _HomeState extends State<Home> {
         decoration: BoxDecoration(
           color: isActive ? Colors.black : Colors.white.withOpacity(0.5),
           borderRadius: BorderRadius.circular(30),
-          
+
           border: Border.all(color: Colors.white, width: 1.5),
         ),
         child: Center(
@@ -65,14 +67,12 @@ class _HomeState extends State<Home> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffd1cfeb),
       body: Container(
-        padding: const EdgeInsets.only(top: 50, left: 20),
+        padding: const EdgeInsets.only(top: 40, left: 20),
         // 3. CustomScrollView enables the entire screen to scroll
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),
@@ -83,13 +83,24 @@ class _HomeState extends State<Home> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(60),
-                    child: Image.asset('assets/images/doctor.jpg', width: 80, height: 80, fit: BoxFit.fill),
+                    child: Image.asset(
+                      'assets/images/doctor.jpg',
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.fill,
+                    ),
                   ),
-                  const SizedBox(height: 30),
-                  Text('Your Trusted', style: AppWidget.headlineTextStyle(26.0)),
-                  Text('Online Pharmacy', style: AppWidget.lightTextStyle(28.0)),
-                  const SizedBox(height: 30.0),
-                  
+                  const SizedBox(height: 15),
+                  Text(
+                    'Your Trusted',
+                    style: AppWidget.headlineTextStyle(26.0),
+                  ),
+                  Text(
+                    'Online Pharmacy',
+                    style: AppWidget.lightTextStyle(28.0),
+                  ),
+                  const SizedBox(height: 15.0),
+
                   // Search Bar
                   Container(
                     margin: const EdgeInsets.only(right: 20),
@@ -107,111 +118,112 @@ class _HomeState extends State<Home> {
                         hintText: 'Search Medicine...',
                         hintStyle: AppWidget.lightTextStyle(15.0),
                         border: InputBorder.none,
-                        contentPadding: const EdgeInsets.only(left: 20, top: 15),
+                        contentPadding: const EdgeInsets.only(
+                          left: 20,
+                          top: 15,
+                        ),
                         suffixIcon: Container(
                           margin: const EdgeInsets.all(4),
                           width: 50,
-                          decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(30)),
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
                           child: const Icon(Icons.search, color: Colors.white),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 30.0),
+                  const SizedBox(height: 20.0),
 
-                  // Horizontal Category List
-                  // SizedBox(
-                  //   height: 50,
-                  //   child: ListView(
-                  //     scrollDirection: Axis.horizontal,
-                  //     children: [
-                  //       categoryTab('All Medicines', allMedicine, () async {
-                  //         setState(() { allMedicine = true; suppliment = false; vitamins = false; herbal = false; selectedCategory="Medicine";});
-                  //         getOntheload();
-                  //       }),
-                  //       categoryTab('Supplements', suppliment, () async {
-                  //         setState(() { allMedicine = false; suppliment = true; vitamins = false; herbal = false; selectedCategory="Supplements";});
-                  //         getOntheload();
-                  //       }),
-                  //       categoryTab('Vitamins', vitamins, () async {
-                  //         setState(() { allMedicine = false; suppliment = false; vitamins = true; herbal = false; selectedCategory="Vitamins";});
-                  //         getOntheload();
-                  //       }),
-                  //       categoryTab('Herbal', herbal, () async {
-                  //         setState(() { allMedicine = false; suppliment = false; vitamins = false; herbal = true; selectedCategory="Herbal";});
-                  //         getOntheload();
-                  //       }),
-                  //     ],
-                  //   ),
-                  // ),
-                
-                // 1. Wrap the Category List in a beautiful Container
-Container(
-  margin: const EdgeInsets.only(right: 20),
-  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-  decoration: BoxDecoration(
-    color: Colors.white.withOpacity(0.3), // Soft frosted glass look
-    borderRadius: BorderRadius.circular(35),
-    border: Border.all(color: Colors.white.withOpacity(0.5), width: 1.5),
-  ),
-  child: SizedBox(
-    height: 45, // Slightly slimmer for a modern look
-    child: ListView(
-      scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
-      children: [
-        categoryTab('All Medicines', allMedicine, () async {
-          setState(() {
-            allMedicine = true; suppliment = false; vitamins = false; herbal = false;
-            selectedCategory = "Medicine";
-          });
-          getOntheload();
-        }),
-        categoryTab('Supplements', suppliment, () async {
-          setState(() {
-            allMedicine = false; suppliment = true; vitamins = false; herbal = false;
-            selectedCategory = "Supplements";
-          });
-          getOntheload();
-        }),
-        categoryTab('Vitamins', vitamins, () async {
-          setState(() {
-            allMedicine = false; suppliment = false; vitamins = true; herbal = false;
-            selectedCategory = "Vitamins";
-          });
-          getOntheload();
-        }),
-        categoryTab('Herbal', herbal, () async {
-          setState(() {
-            allMedicine = false; suppliment = false; vitamins = false; herbal = true;
-            selectedCategory = "Herbal";
-          });
-          getOntheload();
-        }),
-      ],
-    ),
-  ),
-),
-                
+                  Container(
+                    margin: const EdgeInsets.only(right: 20),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(
+                        0.3,
+                      ), // Soft frosted glass look
+                      borderRadius: BorderRadius.circular(35),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.5),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: SizedBox(
+                      height: 45, // Slightly slimmer for a modern look
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        physics: const BouncingScrollPhysics(),
+                        children: [
+                          categoryTab('All Medicines', allMedicine, () async {
+                            setState(() {
+                              allMedicine = true;
+                              suppliment = false;
+                              vitamins = false;
+                              herbal = false;
+                              selectedCategory = "Medicine";
+                            });
+                            getOntheload();
+                          }),
+                          categoryTab('Supplements', suppliment, () async {
+                            setState(() {
+                              allMedicine = false;
+                              suppliment = true;
+                              vitamins = false;
+                              herbal = false;
+                              selectedCategory = "Supplements";
+                            });
+                            getOntheload();
+                          }),
+                          categoryTab('Vitamins', vitamins, () async {
+                            setState(() {
+                              allMedicine = false;
+                              suppliment = false;
+                              vitamins = true;
+                              herbal = false;
+                              selectedCategory = "Vitamins";
+                            });
+                            getOntheload();
+                          }),
+                          categoryTab('Herbal', herbal, () async {
+                            setState(() {
+                              allMedicine = false;
+                              suppliment = false;
+                              vitamins = false;
+                              herbal = true;
+                              selectedCategory = "Herbal";
+                            });
+                            getOntheload();
+                          }),
+                        ],
+                      ),
+                    ),
+                  ),
+
                   const SizedBox(height: 20.0),
                 ],
               ),
             ),
-            
+
             // The Medicine List (SliverList allows it to scroll with the header)
             StreamBuilder(
               stream: productStream,
               builder: (context, AsyncSnapshot snapshot) {
-                if (!snapshot.hasData) return const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator()));
-                
+                if (!snapshot.hasData)
+                  return const SliverToBoxAdapter(
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+
                 return SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      DocumentSnapshot ds = snapshot.data.docs[index];
-                      return productCard(ds); // UI Logic moved to helper for clarity
-                    },
-                    childCount: snapshot.data.docs.length,
-                  ),
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    DocumentSnapshot ds = snapshot.data.docs[index];
+                    return productCard(
+                      ds,
+                    ); // UI Logic moved to helper for clarity
+                  }, childCount: snapshot.data.docs.length),
                 );
               },
             ),
@@ -224,10 +236,18 @@ Container(
   Widget productCard(DocumentSnapshot ds) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => DetailPage(
-          name: ds['Name'], detail: ds['Description'], price: ds['Price'], 
-          company: ds['CompanyName'], image: "assets/images/medicine.png",
-        )));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailPage(
+              name: ds['Name'],
+              detail: ds['Description'],
+              price: ds['Price'],
+              company: ds['CompanyName'],
+              image: "assets/images/medicine.png",
+            ),
+          ),
+        );
       },
       child: Container(
         margin: const EdgeInsets.only(right: 20.0, bottom: 20),
@@ -235,14 +255,19 @@ Container(
           borderRadius: BorderRadius.circular(30),
           gradient: const LinearGradient(
             colors: [Color(0xffbab3a6), Color(0xffddd7cd), Color(0xffa59c8f)],
-            begin: Alignment.topLeft, end: Alignment.bottomRight,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
         ),
         child: Stack(
           children: [
-            Center(child: Image.asset('assets/images/medicine.png', height: 250)),
+            Center(
+              child: Image.asset('assets/images/medicine.png', height: 250),
+            ),
             Positioned(
-              bottom: 0, left: 0, right: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
               child: Container(
                 padding: const EdgeInsets.all(15),
                 margin: const EdgeInsets.all(15),
@@ -258,10 +283,16 @@ Container(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(ds['Name'], style: AppWidget.whiteTextStyle(18)),
-                        Text('\$' + ds['Price'], style: AppWidget.whiteTextStyle(18)),
+                        Text(
+                          '\$' + ds['Price'],
+                          style: AppWidget.whiteTextStyle(18),
+                        ),
                       ],
                     ),
-                    Text(ds['CompanyName'], style: AppWidget.whiteTextStyle(14)),
+                    Text(
+                      ds['CompanyName'],
+                      style: AppWidget.whiteTextStyle(14),
+                    ),
                   ],
                 ),
               ),
