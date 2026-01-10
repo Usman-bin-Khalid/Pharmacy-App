@@ -45,6 +45,7 @@ class _WalletState extends State<Wallet> {
       setState(() {});
     }
   }
+  
 Widget transactionList() {
   return StreamBuilder(
     stream: transactionStream,
