@@ -63,8 +63,7 @@ Widget transactionList() {
       return ListView.builder(
         padding: EdgeInsets.only(bottom: 20), // Added some bottom padding for better look
         itemCount: snapshot.data.docs.length,
-        // REMOVED shrinkWrap: true
-        // REMOVED physics: NeverScrollableScrollPhysics()
+     \
         itemBuilder: (context, index) {
           DocumentSnapshot ds = snapshot.data.docs[index];
           return Container(
