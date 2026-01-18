@@ -104,10 +104,11 @@ class _AddProductState extends State<AddProduct> {
                           onTap: getImage,
                           child: selectedImage != null
                               ? Container(
-                                  width: 150,
+                                  width: double.infinity,
                                   height: 150,
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.black, width: 1.5),
+                                     color: Colors.white,
+                                    border: Border.all(color: Colors.black, width: 0.5),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: ClipRRect(
@@ -119,10 +120,11 @@ class _AddProductState extends State<AddProduct> {
                                   ),
                                 )
                               : Container(
-                                  width: 150,
+                                   width: double.infinity,
                                   height: 150,
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.black, width: 1.5),
+                                    color: Colors.white,
+                                    border: Border.all(color: Colors.black, width: 0.5),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: const Icon(

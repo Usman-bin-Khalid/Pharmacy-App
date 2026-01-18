@@ -5,7 +5,7 @@ import 'package:pharmacy_app/pages/edit_profile.dart';
 import 'package:pharmacy_app/pages/login.dart';
 import 'package:pharmacy_app/services/database.dart';
 import 'package:pharmacy_app/services/shared_pref.dart';
-import 'package:pharmacy_app/widgets/support_widget.dart';
+
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -110,7 +110,7 @@ class _ProfileState extends State<Profile> {
                       ),
                       Column(
                         children: [
-                          const SizedBox(height: 80),
+                          const SizedBox(height: 70),
                           Container(
                             padding: const EdgeInsets.all(5),
                             decoration: BoxDecoration(
@@ -131,13 +131,13 @@ class _ProfileState extends State<Profile> {
                                       "assets/images/profile.png",
                                       height: 130,
                                       width: 130,
-                                      fit: BoxFit.cover,
+                                      fit: BoxFit.fill,
                                     )
                                   : Image.network(
                                       image!,
                                       height: 130,
                                       width: 130,
-                                      fit: BoxFit.cover,
+                                      fit: BoxFit.fill,
                                     ),
                             ),
                           ),
@@ -159,6 +159,7 @@ class _ProfileState extends State<Profile> {
                               fontFamily: 'Poppins',
                             ),
                           ),
+                          SizedBox(height: 10),
                         ],
                       ),
                     ],
