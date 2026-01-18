@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pharmacy_app/pages/login.dart';
+import 'package:pharmacy_app/services/database.dart';
 import 'package:pharmacy_app/services/shared_pref.dart';
 
 class Profile extends StatefulWidget {
@@ -10,11 +12,24 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  String? name, email, image;
+  String? name, email, image, id, dob, gender, phone, address, allergies;
 
   getthesharedpref() async {
-    name = await SharedprefMethods().getUserName();
-    email = await SharedprefMethods().getUserEmail();
+    id = await SharedprefMethods().getUserId();
+    if (id != null) {
+      DocumentSnapshot snapshot = await DatabaseMethods().getUserDetails(id!);
+      if (snapshot.exists) {
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        name = data["Name"] ?? "N/A";
+        email = data["Email"] ?? "N/A";
+        image = data["Image"];
+        dob = data["DOB"] ?? "N/A";
+        gender = data["Gender"] ?? "N/A";
+        phone = data["Phone"] ?? "N/A";
+        address = data["Address"] ?? "N/A";
+        allergies = data["Allergies"] ?? "N/A";
+      }
+    }
     setState(() {});
   }
 
@@ -30,7 +45,7 @@ class _ProfileState extends State<Profile> {
       backgroundColor: Color(0xffd1cfeb),
       body: name == null
           ? Center(child: CircularProgressIndicator())
-          : Container(
+          : SingleChildScrollView(
               child: Column(
                 children: [
                   Stack(
@@ -63,12 +78,19 @@ class _ProfileState extends State<Profile> {
                             borderRadius: BorderRadius.circular(60),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(60),
-                              child: Image.asset(
-                                "assets/images/profile.png",
-                                height: 120,
-                                width: 120,
-                                fit: BoxFit.cover,
-                              ),
+                              child: image == null || image == ""
+                                  ? Image.asset(
+                                      "assets/images/profile.png",
+                                      height: 120,
+                                      width: 120,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.network(
+                                      image!,
+                                      height: 120,
+                                      width: 120,
+                                      fit: BoxFit.cover,
+                                    ),
                             ),
                           ),
                         ),
@@ -137,50 +159,20 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                   ),
+                  _buildProfileField(Icons.email, "Email", email!),
                   SizedBox(height: 20.0),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Material(
-                      borderRadius: BorderRadius.circular(10),
-                      elevation: 2.0,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 15.0,
-                          horizontal: 10.0,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(Icons.email, color: Colors.black),
-                            SizedBox(width: 20.0),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Email",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                Text(
-                                  email!,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  _buildProfileField(Icons.calendar_today, "DOB", dob!),
+                  SizedBox(height: 20.0),
+                  _buildProfileField(Icons.person_outline, "Gender", gender!),
+                  SizedBox(height: 20.0),
+                  _buildProfileField(Icons.phone, "Phone", phone!),
+                  SizedBox(height: 20.0),
+                  _buildProfileField(Icons.location_on, "Address", address!),
+                  SizedBox(height: 20.0),
+                  _buildProfileField(
+                    Icons.medical_services,
+                    "Allergies",
+                    allergies!,
                   ),
                   SizedBox(height: 20.0),
                   GestureDetector(
@@ -228,9 +220,54 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 40.0),
                 ],
               ),
             ),
+    );
+  }
+
+  Widget _buildProfileField(IconData icon, String title, String value) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20.0),
+      child: Material(
+        borderRadius: BorderRadius.circular(10),
+        elevation: 2.0,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, color: Colors.black),
+              SizedBox(width: 20.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    value,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -6,7 +6,7 @@ import 'package:pharmacy_app/services/shared_pref.dart';
 import 'package:pharmacy_app/widgets/support_widget.dart';
 
 class DetailPage extends StatefulWidget {
-  final String name, detail, price, company, image;
+  final String name, detail, price, company, image, category;
 
   const DetailPage({
     super.key,
@@ -15,6 +15,7 @@ class DetailPage extends StatefulWidget {
     required this.price,
     required this.company,
     required this.image,
+    required this.category,
   });
 
   @override
@@ -161,9 +162,35 @@ class _DetailPageState extends State<DetailPage> {
                       ],
                     ),
                     SizedBox(height: 20),
-                    Text('Description', style: AppWidget.lightTextStyle(16)),
-                    SizedBox(height: 10),
+                    Text('Description', style: AppWidget.headlineTextStyle(18)),
+                    SizedBox(height: 5),
                     Text(widget.detail, style: AppWidget.lightTextStyle(16)),
+                    SizedBox(height: 15),
+                    Row(
+                      children: [
+                        Text(
+                          'Category: ',
+                          style: AppWidget.headlineTextStyle(18),
+                        ),
+                        Text(
+                          widget.category,
+                          style: AppWidget.lightTextStyle(16),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 5),
+                    Row(
+                      children: [
+                        Text(
+                          'Company: ',
+                          style: AppWidget.headlineTextStyle(18),
+                        ),
+                        Text(
+                          widget.company,
+                          style: AppWidget.lightTextStyle(16),
+                        ),
+                      ],
+                    ),
 
                     SizedBox(height: 20),
                     Container(

@@ -94,25 +94,54 @@ class _OrderPageState extends State<OrderPage> {
                           ),
                   ),
                   SizedBox(width: 15),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          ds["Product"],
+                          style: AppWidget.headlineTextStyle(18),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          "Quantity : " + ds["Quantity"],
+                          style: AppWidget.headlineTextStyle(16),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          ds["Name"],
+                          style: AppWidget.headlineTextStyle(15),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          "Total Price : " + "\$" + ds["Total"],
+                          style: AppWidget.headlineTextStyle(15),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Spacer(),
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        ds["Product"],
-                        style: AppWidget.headlineTextStyle(18),
+                      GestureDetector(
+                        onTap: () {
+                          deleteOrderDialog(ds.id);
+                        },
+                        child: Icon(Icons.delete, color: Colors.red),
                       ),
-                      SizedBox(height: 2),
-                      Text(
-                        "Quantity : " + ds["Quantity"],
-                        style: AppWidget.headlineTextStyle(16),
-                      ),
-                      SizedBox(height: 2),
-                      Text(ds["Name"], style: AppWidget.headlineTextStyle(15)),
-                      SizedBox(height: 2),
-                      Text(
-                        "Total Price : " + "\$" + ds["Total"],
-                        style: AppWidget.headlineTextStyle(15),
+                      SizedBox(height: 20),
+                      GestureDetector(
+                        onTap: () {
+                          editOrderDialog(
+                            ds.id,
+                            ds["Quantity"],
+                            ds["Price"],
+                            ds["Product"],
+                          );
+                        },
+                        child: Icon(Icons.edit, color: Colors.blue),
                       ),
                     ],
                   ),
@@ -122,6 +151,77 @@ class _OrderPageState extends State<OrderPage> {
           },
         );
       },
+    );
+  }
+
+  deleteOrderDialog(String orderId) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Delete Order"),
+        content: Text("Are you sure you want to delete this order?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () async {
+              await DatabaseMethods().deleteOrder(id!, orderId);
+              Navigator.pop(context);
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text("Order Deleted")));
+            },
+            child: Text("Delete", style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  editOrderDialog(
+    String orderId,
+    String currentQty,
+    String price,
+    String productName,
+  ) {
+    TextEditingController qtyController = TextEditingController(
+      text: currentQty,
+    );
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Edit Quantity"),
+        content: TextField(
+          controller: qtyController,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(hintText: "Enter Quantity"),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () async {
+              if (qtyController.text.isNotEmpty) {
+                int newQty = int.parse(qtyController.text);
+                double newTotal = newQty * double.parse(price);
+                await DatabaseMethods().updateOrder(id!, orderId, {
+                  "Quantity": qtyController.text,
+                  "Total": newTotal.toString(),
+                });
+                Navigator.pop(context);
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text("Order Updated")));
+              }
+            },
+            child: Text("Update"),
+          ),
+        ],
+      ),
     );
   }
 

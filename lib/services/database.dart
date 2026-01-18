@@ -71,4 +71,33 @@ class DatabaseMethods {
   Future<DocumentSnapshot> getUserDetails(String id) async {
     return await FirebaseFirestore.instance.collection("users").doc(id).get();
   }
+
+  Future updateUserDetails(Map<String, dynamic> updateMap, String id) {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(id)
+        .update(updateMap);
+  }
+
+  Future deleteOrder(String userId, String orderId) {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("Orders")
+        .doc(orderId)
+        .delete();
+  }
+
+  Future updateOrder(
+    String userId,
+    String orderId,
+    Map<String, dynamic> updateMap,
+  ) {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("Orders")
+        .doc(orderId)
+        .update(updateMap);
+  }
 }

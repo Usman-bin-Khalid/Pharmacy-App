@@ -1,6 +1,10 @@
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pharmacy_app/services/database.dart';
 import 'package:pharmacy_app/widgets/support_widget.dart';
+import 'package:random_string/random_string.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({super.key});
@@ -14,6 +18,15 @@ class _AddProductState extends State<AddProduct> {
   TextEditingController productPriceController = new TextEditingController();
   TextEditingController companyNameController = new TextEditingController();
   TextEditingController descController = new TextEditingController();
+  final ImagePicker _picker = ImagePicker();
+  File? selectedImage;
+
+  Future getImage() async {
+    var image = await _picker.pickImage(source: ImageSource.gallery);
+
+    selectedImage = File(image!.path);
+    setState(() {});
+  }
   final List<String> productCategories = [
     'Medicine',
     'Suppliments',
@@ -72,14 +85,54 @@ class _AddProductState extends State<AddProduct> {
                   ),
                 ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 20),
-                  const Text(
-                    'Product Name',
-                    style: TextStyle(fontSize: 20.0, fontFamily: 'FredokaBold'),
-                  ),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10),
+                    Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          getImage();
+                        },
+                        child: selectedImage != null
+                            ? Container(
+                                width: 150,
+                                height: 150,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.black, width: 1.5),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: Image.file(
+                                    selectedImage!,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                width: 150,
+                                height: 150,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.black, width: 1.5),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Icon(
+                                  Icons.camera_alt_outlined,
+                                  color: Colors.black,
+                                ),
+                              ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    const Text(
+                      'Product Name',
+                      style:
+                          TextStyle(fontSize: 20.0, fontFamily: 'FredokaBold'),
+                    ),
                   const SizedBox(height: 5),
                   _buildTextField("Product Name", productNameController),
 
@@ -155,12 +208,30 @@ class _AddProductState extends State<AddProduct> {
                           value != "" &&
                           companyNameController.text != "" &&
                           descController.text != "") {
+                        String addId = randomAlphaNumeric(10);
+                        String? imageUrl;
+
+                        if (selectedImage != null) {
+                          Reference firebaseStorageRef = FirebaseStorage
+                              .instance
+                              .ref()
+                              .child("productImages")
+                              .child(addId);
+                          final UploadTask task =
+                              firebaseStorageRef.putFile(selectedImage!);
+                          var downloadUrl =
+                              await (await task).ref.getDownloadURL();
+                          imageUrl = downloadUrl;
+                        }
+
                         Map<String, dynamic> addProduct = {
                           'Name': productNameController.text.trim(),
                           'Price': productPriceController.text.trim(),
                           'Category': value,
                           'CompanyName': companyNameController.text.trim(),
                           'Description': descController.text.trim(),
+                          'Image': imageUrl ??
+                              "https://firebasestorage.googleapis.com/v0/b/flutter-pharmacy-app.appspot.com/o/productImages%2Fplaceholder.png?alt=media&token=8b8e0b2e-9d1e-4b1e-8b1e-0b2e0b2e0b2e", // Placeholder if no image
                         };
                         await DatabaseMethods().addProduct(addProduct);
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -208,8 +279,9 @@ class _AddProductState extends State<AddProduct> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildTextField(String hint, TextEditingController controller) {
     return Container(

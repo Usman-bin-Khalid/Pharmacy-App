@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pharmacy_app/pages/complete_profile.dart';
 import 'package:pharmacy_app/pages/login.dart';
 import 'package:pharmacy_app/services/database.dart';
 import 'package:pharmacy_app/services/shared_pref.dart';
@@ -17,6 +18,7 @@ class _SignupState extends State<Signup> {
   TextEditingController nameController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
+  TextEditingController confirmPasswordController = new TextEditingController();
   bool loading = false;
   String? name, email, password;
   registraion() async {
@@ -40,7 +42,7 @@ class _SignupState extends State<Signup> {
       await DatabaseMethods().addUserInfo(userInfoMap, id);
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const Login()),
+        MaterialPageRoute(builder: (context) => CompleteProfile(userId: id)),
       );
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -207,7 +209,27 @@ class _SignupState extends State<Signup> {
                     ),
 
                     const SizedBox(height: 5),
-                    _buildTextField("Your Password", passwordController),
+                    _buildTextField(
+                      "Your Password",
+                      passwordController,
+                      isPassword: true,
+                    ),
+
+                    const SizedBox(height: 20.0),
+                    const Text(
+                      'Confirm Password',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontFamily: 'FredokaBold',
+                      ),
+                    ),
+
+                    const SizedBox(height: 5),
+                    _buildTextField(
+                      "Confirm Password",
+                      confirmPasswordController,
+                      isPassword: true,
+                    ),
 
                     const SizedBox(height: 20.0),
 
@@ -215,7 +237,21 @@ class _SignupState extends State<Signup> {
                       onTap: () {
                         if (nameController.text.isNotEmpty &&
                             emailController.text.isNotEmpty &&
-                            passwordController.text.isNotEmpty) {
+                            passwordController.text.isNotEmpty &&
+                            confirmPasswordController.text.isNotEmpty) {
+                          if (passwordController.text !=
+                              confirmPasswordController.text) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text(
+                                  'Passwords do not match',
+                                  style: AppWidget.whiteTextStyle(20),
+                                ),
+                              ),
+                            );
+                            return;
+                          }
                           setState(() {
                             name = nameController.text;
                             email = emailController.text;
@@ -290,7 +326,11 @@ class _SignupState extends State<Signup> {
     );
   }
 
-  Widget _buildTextField(String hint, TextEditingController controller) {
+  Widget _buildTextField(
+    String hint,
+    TextEditingController controller, {
+    bool isPassword = false,
+  }) {
     return Container(
       padding: const EdgeInsets.only(left: 20),
       decoration: BoxDecoration(
@@ -303,6 +343,7 @@ class _SignupState extends State<Signup> {
       ),
       child: TextField(
         controller: controller,
+        obscureText: isPassword,
         decoration: InputDecoration(border: InputBorder.none, hintText: hint),
       ),
     );

@@ -23,10 +23,7 @@ class _HomeState extends State<Home> {
     productStream = await DatabaseMethods().getAllProducts(selectedCategory);
     setState(() {});
   }
-  
-   
 
-  
   // Search function
   searchProducts(String name) async {
     productStream = await DatabaseMethods().search(name, selectedCategory);
@@ -243,7 +240,8 @@ class _HomeState extends State<Home> {
               detail: ds['Description'],
               price: ds['Price'],
               company: ds['CompanyName'],
-              image: "assets/images/medicine.png",
+              image: ds['Image'],
+              category: ds['Category'],
             ),
           ),
         );
@@ -261,7 +259,9 @@ class _HomeState extends State<Home> {
         child: Stack(
           children: [
             Center(
-              child: Image.asset('assets/images/medicine.png', height: 250),
+              child: ds['Image'].toString().startsWith("assets/")
+                  ? Image.asset(ds['Image'], height: 250)
+                  : Image.network(ds['Image'], height: 250, fit: BoxFit.cover),
             ),
             Positioned(
               bottom: 0,
