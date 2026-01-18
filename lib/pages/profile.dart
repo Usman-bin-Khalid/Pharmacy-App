@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:pharmacy_app/pages/edit_profile.dart';
 import 'package:pharmacy_app/pages/login.dart';
 import 'package:pharmacy_app/services/database.dart';
 import 'package:pharmacy_app/services/shared_pref.dart';
+import 'package:pharmacy_app/widgets/support_widget.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -41,232 +44,246 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        systemStatusBarContrastEnforced: false,
+      ),
+    );
     return Scaffold(
-      backgroundColor: Color(0xffd1cfeb),
+            extendBodyBehindAppBar: true,
+      backgroundColor: const Color(0xffd1cfeb),
       body: name == null
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
                 children: [
                   Stack(
+                    alignment: Alignment.center,
                     children: [
                       Container(
-                        padding: EdgeInsets.only(
-                          top: 45.0,
-                          left: 20.0,
-                          right: 20.0,
-                        ),
-                        height: MediaQuery.of(context).size.height / 4.3,
+                        height: MediaQuery.of(context).size.height / 3.0,
                         width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: Colors.black,
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Color(0xff6a5ae0), Color(0xff9087e5)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
                           borderRadius: BorderRadius.vertical(
-                            bottom: Radius.elliptical(
-                              MediaQuery.of(context).size.width,
-                              105.0,
-                            ),
+                            bottom: Radius.circular(50),
                           ),
                         ),
                       ),
-                      Center(
-                        child: Container(
-                          margin: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height / 6.5,
+                      Positioned(
+                        top: 50,
+                        right: 20,
+                        child: GestureDetector(
+                          onTap: () async {
+                            bool? updated = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditProfile(
+                                  id: id!,
+                                  name: name!,
+                                  phone: phone!,
+                                  address: address!,
+                                  allergies: allergies!,
+                                  image: image ?? "",
+                                ),
+                              ),
+                            );
+                            if (updated == true) {
+                              getthesharedpref();
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(Icons.edit, color: Colors.white),
                           ),
-                          child: Material(
-                            elevation: 10.0,
-                            borderRadius: BorderRadius.circular(60),
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          const SizedBox(height: 80),
+                          Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 10),
+                                ),
+                              ],
+                            ),
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(60),
+                              borderRadius: BorderRadius.circular(70),
                               child: image == null || image == ""
                                   ? Image.asset(
                                       "assets/images/profile.png",
-                                      height: 120,
-                                      width: 120,
+                                      height: 130,
+                                      width: 130,
                                       fit: BoxFit.cover,
                                     )
                                   : Image.network(
                                       image!,
-                                      height: 120,
-                                      width: 120,
+                                      height: 130,
+                                      width: 130,
                                       fit: BoxFit.cover,
                                     ),
                             ),
                           ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 70.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              name!,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 23.0,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Poppins',
-                              ),
+                          const SizedBox(height: 15),
+                          Text(
+                            name!,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 26.0,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'FredokaBold',
                             ),
-                          ],
-                        ),
+                          ),
+                          Text(
+                            email!,
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.8),
+                              fontSize: 16.0,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  SizedBox(height: 20.0),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Material(
-                      borderRadius: BorderRadius.circular(10),
-                      elevation: 2.0,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 15.0,
-                          horizontal: 10.0,
+                  const SizedBox(height: 30),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Column(
+                      children: [
+                        _buildProfileCard(Icons.person, "Full Name", name!),
+                        _buildProfileCard(
+                          Icons.calendar_month,
+                          "Date of Birth",
+                          dob!,
                         ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
+                        _buildProfileCard(Icons.wc, "Gender", gender!),
+                        _buildProfileCard(Icons.phone, "Phone Number", phone!),
+                        _buildProfileCard(
+                          Icons.location_on,
+                          "Primary Address",
+                          address!,
                         ),
-                        child: Row(
-                          children: [
-                            Icon(Icons.person, color: Colors.black),
-                            SizedBox(width: 20.0),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
+                        _buildProfileCard(
+                          Icons.medical_services,
+                          "Allergies & Notes",
+                          allergies!,
+                        ),
+                        const SizedBox(height: 30),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Login(),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 18),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.red.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(
+                                color: Colors.red.withOpacity(0.3),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Icon(Icons.logout, color: Colors.red),
+                                SizedBox(width: 10),
                                 Text(
-                                  "Name",
+                                  "Logout from Account",
                                   style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                Text(
-                                  name!,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w600,
+                                    color: Colors.red,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  _buildProfileField(Icons.email, "Email", email!),
-                  SizedBox(height: 20.0),
-                  _buildProfileField(Icons.calendar_today, "DOB", dob!),
-                  SizedBox(height: 20.0),
-                  _buildProfileField(Icons.person_outline, "Gender", gender!),
-                  SizedBox(height: 20.0),
-                  _buildProfileField(Icons.phone, "Phone", phone!),
-                  SizedBox(height: 20.0),
-                  _buildProfileField(Icons.location_on, "Address", address!),
-                  SizedBox(height: 20.0),
-                  _buildProfileField(
-                    Icons.medical_services,
-                    "Allergies",
-                    allergies!,
-                  ),
-                  SizedBox(height: 20.0),
-                  GestureDetector(
-                    onTap: () async {
-                      // Add logout logic here if needed
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => Login()),
-                      );
-                    },
-                    child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Material(
-                        borderRadius: BorderRadius.circular(10),
-                        elevation: 2.0,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 15.0,
-                            horizontal: 10.0,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(Icons.logout, color: Colors.black),
-                              SizedBox(width: 20.0),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Log Out",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
                           ),
                         ),
-                      ),
+                        const SizedBox(height: 50),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 40.0),
                 ],
               ),
             ),
     );
   }
 
-  Widget _buildProfileField(IconData icon, String title, String value) {
+  Widget _buildProfileCard(IconData icon, String title, String value) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.0),
-      child: Material(
-        borderRadius: BorderRadius.circular(10),
-        elevation: 2.0,
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
+      margin: const EdgeInsets.only(bottom: 15),
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
           ),
-          child: Row(
-            children: [
-              Icon(icon, color: Colors.black),
-              SizedBox(width: 20.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    value,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color(0xff6a5ae0).withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: const Color(0xff6a5ae0), size: 24),
           ),
-        ),
+          const SizedBox(width: 15),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.black54,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

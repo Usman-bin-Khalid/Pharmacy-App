@@ -135,7 +135,7 @@ class _AddProductState extends State<AddProduct> {
                       const SizedBox(height: 20),
                       const Text(
                         'Product Name',
-                        style: TextStyle(fontSize: 20.0, fontFamily: 'FredokaBold'),
+                        style: TextStyle(fontSize: 20.0, fontFamily: 'FredokaBold')
                       ),
                       const SizedBox(height: 5),
                       _buildTextField("Product Name", productNameController),

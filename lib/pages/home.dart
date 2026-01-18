@@ -230,18 +230,34 @@ class _HomeState extends State<Home> {
   }
 
   Widget productCard(DocumentSnapshot ds) {
+    Map<String, dynamic> data = ds.data() as Map<String, dynamic>;
+    String image = data.containsKey('Image')
+        ? data['Image']
+        : "assets/images/medicine.png";
+    String name = data.containsKey('Name') ? data['Name'] : "N/A";
+    String price = data.containsKey('Price') ? data['Price'] : "0";
+    String company = data.containsKey('CompanyName')
+        ? data['CompanyName']
+        : "N/A";
+    String detail = data.containsKey('Description')
+        ? data['Description']
+        : "No Description";
+    String category = data.containsKey('Category')
+        ? data['Category']
+        : "Pharmacy";
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => DetailPage(
-              name: ds['Name'],
-              detail: ds['Description'],
-              price: ds['Price'],
-              company: ds['CompanyName'],
-              image: ds['Image'],
-              category: ds['Category'],
+              name: name,
+              detail: detail,
+              price: price,
+              company: company,
+              image: image,
+              category: category,
             ),
           ),
         );
@@ -259,9 +275,9 @@ class _HomeState extends State<Home> {
         child: Stack(
           children: [
             Center(
-              child: ds['Image'].toString().startsWith("assets/")
-                  ? Image.asset(ds['Image'], height: 250)
-                  : Image.network(ds['Image'], height: 250, fit: BoxFit.cover),
+              child: image.startsWith("assets/")
+                  ? Image.asset(image, height: 250)
+                  : Image.network(image, height: 250, fit: BoxFit.cover),
             ),
             Positioned(
               bottom: 0,
@@ -281,17 +297,11 @@ class _HomeState extends State<Home> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(ds['Name'], style: AppWidget.whiteTextStyle(18)),
-                        Text(
-                          '\$' + ds['Price'],
-                          style: AppWidget.whiteTextStyle(18),
-                        ),
+                        Text(name, style: AppWidget.whiteTextStyle(18)),
+                        Text('\$' + price, style: AppWidget.whiteTextStyle(18)),
                       ],
                     ),
-                    Text(
-                      ds['CompanyName'],
-                      style: AppWidget.whiteTextStyle(14),
-                    ),
+                    Text(company, style: AppWidget.whiteTextStyle(14)),
                   ],
                 ),
               ),
